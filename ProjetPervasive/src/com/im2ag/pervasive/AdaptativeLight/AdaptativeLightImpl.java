@@ -1,3 +1,4 @@
+package com.im2ag.pervasive.AdaptativeLight;
 
 import fr.liglab.adele.icasa.device.DeviceListener;
 import fr.liglab.adele.icasa.device.GenericDevice;
