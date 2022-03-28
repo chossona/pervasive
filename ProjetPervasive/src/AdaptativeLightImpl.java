@@ -23,7 +23,19 @@ public class AdaptativeLightImpl implements DeviceListener<GenericDevice> {
 	private Photometer[] photometers;
 	/** Percentage of luminosity wanted*/
 	private int luxRate = 55;
+	/** Light must be turn On ?*/
+	private boolean lightsOn = true;
+	
+	private double targetedIlluminance = 4000.0d;
+    /**
+     * Watt to lumens conversion factor
+     * It has been considered that: 1 Watt=680.0 lumens at 555nm.
+     */
+    public final static double ONE_WATT_TO_ONE_LUMEN = 680.0d;
 
+    public double illuminanceDimmerLights(DimmerLight dim, double roomSize, int numberOfLights) {
+    	return (targetedIlluminance*roomSize)/(ONE_WATT_TO_ONE_LUMEN*dim.getMaxPowerLevel())/numberOfLights;
+    }
 	/** Bind Method for dimmerLight dependency */
 	public void bindDimmerLight(DimmerLight dimmerLight, Map properties) {
 		System.out.println("Bind Dimmer Light " + dimmerLight.getSerialNumber());
@@ -89,6 +101,27 @@ public class AdaptativeLightImpl implements DeviceListener<GenericDevice> {
       }
       return dimmerLightsLocation;
     }
+    
+    private synchronized List<Photometer> getPhotometersFromLocation(
+            String location) {
+          List<Photometer> photometersLocation = new ArrayList<Photometer>();
+          for (Photometer photometer : photometers) {
+            if (photometer.getPropertyValue(LOCATION_PROPERTY_NAME).equals(
+                location)) {
+            	photometersLocation.add(photometer);
+            }
+          }
+          return photometersLocation;
+        }
+    
+    private double getCurrentIlluminance(String location) {
+    	double res = 0;
+    	List<Photometer> photos = this.getPhotometersFromLocation(location);
+    	for(Photometer photo : photos) {
+    		res+= photo.getIlluminance();
+    	}
+    	return res/photos.size();
+    }
 
 	@Override
 	public void deviceAdded(GenericDevice arg0) {
@@ -124,8 +157,7 @@ public class AdaptativeLightImpl implements DeviceListener<GenericDevice> {
 			// get the location of the changing sensor:
 			String detectorLocation = (String) changingSensor.getPropertyValue(LOCATION_PROPERTY_NAME);
 			System.out.println("The device with the serial number" + changingSensor.getSerialNumber() + " has changed");
-			System.out.println("This sensor is in the room :" + detectorLocation);
-		
+			System.out.println("This sensor is in the room :" + detectorLocation);		
 			// if the location is known :
 		    if (!detectorLocation.equals(LOCATION_UNKNOWN)) {
 		      // get the related binary lights
@@ -136,8 +168,9 @@ public class AdaptativeLightImpl implements DeviceListener<GenericDevice> {
 		           // and switch them on/off depending on the sensed presence
 		           if(changingSensor.getSensedPresence()){
 		        	   //on calcule la luminosité souhaiter en fonction du taux luxRate (en pourcent)
-		        	   luxValue = dimmerLight.getMaxPowerLevel()*luxRate/100;
-		        	   dimmerLight.setPowerLevel(55.0); //turn on
+		        	   luxValue = illuminanceDimmerLights(dimmerLight, getRoomSize(detectorLocation), sameLocationLigths.size());
+		        	   System.out.println("lux value = "+ luxValue);
+		        	   dimmerLight.setPowerLevel(luxValue); //turn on
 		        	   currentlight++;       	   
 		           }else{
 		        	   //turn off the light
@@ -159,6 +192,10 @@ public class AdaptativeLightImpl implements DeviceListener<GenericDevice> {
 	public void deviceRemoved(GenericDevice arg0) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	private double getRoomSize(String room) {
+		return 12.5;
 	}
 
 }
