@@ -17,4 +17,19 @@
     </requires>
   </component>
   <instance component="AdaptativeLight" name="my.first.follow.me"/>
+  <component classname="shutter.ShutterImpl" name="Shutter"/>
+  <component classname="shutter.ShutterControlImpl" name="ShutterControl">
+    <requires aggregate="true" optional="true" specification="shutter.Shutter" field="shutters">
+      <callback method="bindShutter" type="bind"/>
+      <callback method="unbindShutter" type="unbind"/>
+    </requires>
+    <callback method="start" transition="validate"/>
+    <callback method="stop" transition="invalidate"/>
+    <requires aggregate="true" optional="true" specification="fr.liglab.adele.icasa.device.light.Photometer" field="photometers">
+      <callback method="bindPhotometer" type="bind"/>
+      <callback method="unbindPhotometer" type="unbind"/>
+    </requires>
+  </component>
+  <instance component="Shutter" name="Shutter-1"/>
+  <instance component="ShutterControl" name="ShutterControl-2"/>
 </ipojo>
