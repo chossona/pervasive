@@ -1,9 +1,10 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: BinaryLightFollowMe
-Bundle-RequiredExecutionEnvironment: JavaSE-11,JavaSE-1.8
 Bundle-SymbolicName: BinaryLightFollowMe
 Bundle-Version: 1.0.0.qualifier
+Export-Package: shutter
+Bundle-RequiredExecutionEnvironment: JavaSE-11,JavaSE-1.8
 Created-By: iPOJO 1.12.1
 Import-Package: fr.liglab.adele.icasa, fr.liglab.adele.icasa.access, fr.
  liglab.adele.icasa.access.command, fr.liglab.adele.icasa.application, f
@@ -40,52 +41,102 @@ Import-Package: fr.liglab.adele.icasa, fr.liglab.adele.icasa.access, fr.
  .adele.icasa.simulator.services, org.apache.felix.ipojo;version="[1.12.
  1,2.0.0)", org.apache.felix.ipojo.architecture;version="[1.12.1,2.0.0)"
  , org.json, org.osgi.service.cm;version=1.2, org.osgi.service.log;versi
- on=1.3
+ on=1.3, shutter
 iPOJO-Components: instance { $component="AdaptativeLight" $name="my.firs
- t.follow.me" }component { $classname="AdaptativeLightImpl" $name="Adapt
- ativeLight" requires { $aggregate="true" $optional="true" $specificatio
- n="fr.liglab.adele.icasa.device.presence.PresenceSensor" $field="presen
- ceSensors" callback { $method="bindPresenceSensors" $type="bind" }callb
- ack { $method="unbindPresenceSensors" $type="unbind" }}requires { $aggr
+ t.follow.me" }instance { $component="Shutter" $name="Shutter-1" }instan
+ ce { $component="ShutterControl" $name="ShutterControl-2" }component { 
+ $classname="AdaptativeLightImpl" $name="AdaptativeLight" requires { $ag
+ gregate="true" $optional="true" $specification="fr.liglab.adele.icasa.d
+ evice.presence.PresenceSensor" $field="presenceSensors" callback { $met
+ hod="bindPresenceSensors" $type="bind" }callback { $method="unbindPrese
+ nceSensors" $type="unbind" }}requires { $aggregate="true" $optional="tr
+ ue" $specification="fr.liglab.adele.icasa.device.light.DimmerLight" $fi
+ eld="dimmerLights" callback { $method="bindDimmerLight" $type="bind" }c
+ allback { $method="unbindDimmerLight" $type="unbind" }}requires { $aggr
  egate="true" $optional="true" $specification="fr.liglab.adele.icasa.dev
- ice.light.DimmerLight" $field="dimmerLights" callback { $method="bindDi
- mmerLight" $type="bind" }callback { $method="unbindDimmerLight" $type="
- unbind" }}requires { $aggregate="true" $optional="true" $specification=
- "fr.liglab.adele.icasa.device.light.Photometer" $field="photometers" ca
- llback { $method="bindPhotometer" $type="bind" }callback { $method="unb
- indPhotometer" $type="unbind" }}callback { $method="start" $transition=
- "validate" }callback { $method="stop" $transition="invalidate" }manipul
- ation { $classname="AdaptativeLightImpl" interface { $name="fr.liglab.a
- dele.icasa.device.DeviceListener" }field { $name="dimmerLights" $type="
- fr.liglab.adele.icasa.device.light.DimmerLight[]" }field { $name="luxRa
- te" $type="int" }field { $name="photometers" $type="fr.liglab.adele.ica
- sa.device.light.Photometer[]" }field { $name="presenceSensors" $type="f
- r.liglab.adele.icasa.device.presence.PresenceSensor[]" }method { $name=
- "bindDimmerLight" $arguments="{fr.liglab.adele.icasa.device.light.Dimme
- rLight,java.util.Map}" $names="{dimmerLight,properties}" }method { $nam
- e="unbindDimmerLight" $arguments="{fr.liglab.adele.icasa.device.light.D
- immerLight,java.util.Map}" $names="{dimmerLight,properties}" }method { 
- $name="bindPhotometer" $arguments="{fr.liglab.adele.icasa.device.light.
- Photometer,java.util.Map}" $names="{photometer,properties}" }method { $
- name="unbindPhotometer" $arguments="{fr.liglab.adele.icasa.device.light
- .Photometer,java.util.Map}" $names="{photometer,properties}" }method { 
- $name="bindPresenceSensors" $arguments="{fr.liglab.adele.icasa.device.p
- resence.PresenceSensor,java.util.Map}" $names="{presenceSensor,properti
- es}" }method { $name="unbindPresenceSensors" $arguments="{fr.liglab.ade
- le.icasa.device.presence.PresenceSensor,java.util.Map}" $names="{presen
- ceSensor,properties}" }method { $name="stop" }method { $name="start" }m
- ethod { $name="getDimmerLightFromLocation" $return="java.util.List" $ar
- guments="{java.lang.String}" $names="{location}" }method { $name="devic
- eAdded" $arguments="{fr.liglab.adele.icasa.device.GenericDevice}" $name
- s="{arg0}" }method { $name="deviceEvent" $arguments="{fr.liglab.adele.i
- casa.device.GenericDevice,java.lang.Object}" $names="{arg0,arg1}" }meth
- od { $name="devicePropertyAdded" $arguments="{fr.liglab.adele.icasa.dev
- ice.GenericDevice,java.lang.String}" $names="{arg0,arg1}" }method { $na
- me="devicePropertyModified" $arguments="{fr.liglab.adele.icasa.device.G
- enericDevice,java.lang.String,java.lang.Object,java.lang.Object}" $name
- s="{device,propertyName,oldValue,newValue}" }method { $name="deviceProp
- ertyRemoved" $arguments="{fr.liglab.adele.icasa.device.GenericDevice,ja
- va.lang.String}" $names="{arg0,arg1}" }method { $name="deviceRemoved" $
- arguments="{fr.liglab.adele.icasa.device.GenericDevice}" $names="{arg0}
- " }}}
+ ice.light.Photometer" $field="photometers" callback { $method="bindPhot
+ ometer" $type="bind" }callback { $method="unbindPhotometer" $type="unbi
+ nd" }}callback { $method="start" $transition="validate" }callback { $me
+ thod="stop" $transition="invalidate" }manipulation { $classname="Adapta
+ tiveLightImpl" interface { $name="fr.liglab.adele.icasa.device.DeviceLi
+ stener" }field { $name="dimmerLights" $type="fr.liglab.adele.icasa.devi
+ ce.light.DimmerLight[]" }field { $name="luxRate" $type="int" }field { $
+ name="photometers" $type="fr.liglab.adele.icasa.device.light.Photometer
+ []" }field { $name="presenceSensors" $type="fr.liglab.adele.icasa.devic
+ e.presence.PresenceSensor[]" }method { $name="bindDimmerLight" $argumen
+ ts="{fr.liglab.adele.icasa.device.light.DimmerLight,java.util.Map}" $na
+ mes="{dimmerLight,properties}" }method { $name="unbindDimmerLight" $arg
+ uments="{fr.liglab.adele.icasa.device.light.DimmerLight,java.util.Map}"
+  $names="{dimmerLight,properties}" }method { $name="bindPhotometer" $ar
+ guments="{fr.liglab.adele.icasa.device.light.Photometer,java.util.Map}"
+  $names="{photometer,properties}" }method { $name="unbindPhotometer" $a
+ rguments="{fr.liglab.adele.icasa.device.light.Photometer,java.util.Map}
+ " $names="{photometer,properties}" }method { $name="bindPresenceSensors
+ " $arguments="{fr.liglab.adele.icasa.device.presence.PresenceSensor,jav
+ a.util.Map}" $names="{presenceSensor,properties}" }method { $name="unbi
+ ndPresenceSensors" $arguments="{fr.liglab.adele.icasa.device.presence.P
+ resenceSensor,java.util.Map}" $names="{presenceSensor,properties}" }met
+ hod { $name="stop" }method { $name="start" }method { $name="getDimmerLi
+ ghtFromLocation" $return="java.util.List" $arguments="{java.lang.String
+ }" $names="{location}" }method { $name="deviceAdded" $arguments="{fr.li
+ glab.adele.icasa.device.GenericDevice}" $names="{arg0}" }method { $name
+ ="deviceEvent" $arguments="{fr.liglab.adele.icasa.device.GenericDevice,
+ java.lang.Object}" $names="{arg0,arg1}" }method { $name="deviceProperty
+ Added" $arguments="{fr.liglab.adele.icasa.device.GenericDevice,java.lan
+ g.String}" $names="{arg0,arg1}" }method { $name="devicePropertyModified
+ " $arguments="{fr.liglab.adele.icasa.device.GenericDevice,java.lang.Str
+ ing,java.lang.Object,java.lang.Object}" $names="{device,propertyName,ol
+ dValue,newValue}" }method { $name="devicePropertyRemoved" $arguments="{
+ fr.liglab.adele.icasa.device.GenericDevice,java.lang.String}" $names="{
+ arg0,arg1}" }method { $name="deviceRemoved" $arguments="{fr.liglab.adel
+ e.icasa.device.GenericDevice}" $names="{arg0}" }}}component { $classnam
+ e="shutter.ShutterImpl" $name="Shutter" manipulation { $classname="shut
+ ter.ShutterImpl" $super="fr.liglab.adele.icasa.device.util.AbstractDevi
+ ce" interface { $name="shutter.Shutter" }interface { $name="fr.liglab.a
+ dele.icasa.simulator.SimulatedDevice" }field { $name="m_serialNumber" $
+ type="java.lang.String" }method { $name="getSerialNumber" $return="java
+ .lang.String" }method { $name="isOpen" $return="boolean" }method { $nam
+ e="open" }method { $name="close" }}}component { $classname="shutter.Shu
+ tterControlImpl" $name="ShutterControl" requires { $aggregate="true" $o
+ ptional="true" $specification="shutter.Shutter" $field="shutters" callb
+ ack { $method="bindShutter" $type="bind" }callback { $method="unbindShu
+ tter" $type="unbind" }}requires { $aggregate="true" $optional="true" $s
+ pecification="fr.liglab.adele.icasa.device.light.Photometer" $field="ph
+ otometers" callback { $method="bindPhotometer" $type="bind" }callback {
+  $method="unbindPhotometer" $type="unbind" }}callback { $method="start"
+  $transition="validate" }callback { $method="stop" $transition="invalid
+ ate" }manipulation { $classname="shutter.ShutterControlImpl" interface 
+ { $name="fr.liglab.adele.icasa.device.DeviceListener" }field { $name="p
+ hotometers" $type="fr.liglab.adele.icasa.device.light.Photometer[]" }fi
+ eld { $name="shutters" $type="shutter.Shutter[]" }method { $name="bindP
+ hotometer" $arguments="{fr.liglab.adele.icasa.device.light.Photometer,j
+ ava.util.Map}" $names="{photometer,properties}" }method { $name="unbind
+ Photometer" $arguments="{fr.liglab.adele.icasa.device.light.Photometer,
+ java.util.Map}" $names="{photometer,properties}" }method { $name="bindS
+ hutter" $arguments="{shutter.Shutter,java.util.Map}" $names="{shutter,p
+ roperties}" }method { $name="unbindShutter" $arguments="{shutter.Shutte
+ r,java.util.Map}" $names="{shutter,properties}" }method { $name="start"
+  }method { $name="stop" }method { $name="devicePropertyModified" $argum
+ ents="{fr.liglab.adele.icasa.device.GenericDevice,java.lang.String,java
+ .lang.Object,java.lang.Object}" $names="{device,propertyName,oldValue,n
+ ewValue}" }method { $name="deviceAdded" $arguments="{fr.liglab.adele.ic
+ asa.device.GenericDevice}" $names="{arg0}" }method { $name="deviceEvent
+ " $arguments="{fr.liglab.adele.icasa.device.GenericDevice,java.lang.Obj
+ ect}" $names="{arg0,arg1}" }method { $name="devicePropertyAdded" $argum
+ ents="{fr.liglab.adele.icasa.device.GenericDevice,java.lang.String}" $n
+ ames="{arg0,arg1}" }method { $name="devicePropertyRemoved" $arguments="
+ {fr.liglab.adele.icasa.device.GenericDevice,java.lang.String}" $names="
+ {arg0,arg1}" }method { $name="deviceRemoved" $arguments="{fr.liglab.ade
+ le.icasa.device.GenericDevice}" $names="{arg0}" }method { $name="getShu
+ ttersFromLocation" $return="java.util.List" $arguments="{java.lang.Stri
+ ng}" $names="{location}" }}}component { $name="iCasa.Shutter" $classnam
+ e="shutter.ShutterImpl" provides { property { $name="test" $type="java.
+ lang.Boolean" }property { $name="device.serialNumber" $field="m_serialN
+ umber" $mandatory="true" }}manipulation { $classname="shutter.ShutterIm
+ pl" $super="fr.liglab.adele.icasa.device.util.AbstractDevice" interface
+  { $name="shutter.Shutter" }interface { $name="fr.liglab.adele.icasa.si
+ mulator.SimulatedDevice" }field { $name="m_serialNumber" $type="java.la
+ ng.String" }method { $name="getSerialNumber" $return="java.lang.String"
+  }method { $name="isOpen" $return="boolean" }method { $name="open" }met
+ hod { $name="close" }}}
 
