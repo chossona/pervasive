@@ -32,4 +32,17 @@
   </component>
   <instance component="Shutter" name="Shutter-1"/>
   <instance component="ShutterControl" name="ShutterControl-2"/>
+  <component classname="temperature.TemperatureControlImpl" name="TemperatureControl">
+    <callback method="start" transition="validate"/>
+    <callback method="stop" transition="invalidate"/>
+    <requires aggregate="true" optional="true" specification="fr.liglab.adele.icasa.device.temperature.Thermometer" field="Thermometer">
+      <callback method="BindThermometer" type="bind"/>
+      <callback method="UnbindThermometer" type="unbind"/>
+    </requires>
+    <requires aggregate="true" optional="true" specification="fr.liglab.adele.icasa.device.temperature.Heater" field="Heater">
+      <callback method="BindHeater" type="bind"/>
+      <callback method="UnbindHeater" type="unbind"/>
+    </requires>
+  </component>
+  <instance component="TemperatureControl" name="TemperatureControl-1"/>
 </ipojo>
