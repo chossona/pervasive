@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ipojo xmlns="org.apache.felix.ipojo">
+<ipojo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="org.apache.felix.ipojo http://felix.apache.org/ipojo/schemas/CURRENT/core.xsd org.apache.felix.ipojo.handlers.jmx http://felix.apache.org/ipojo/schemas/CURRENT/jmx.xsd"
+	xmlns="org.apache.felix.ipojo" xmlns:jmx="org.apache.felix.ipojo.handlers.jmx">
   <component classname="AdaptativeLightImpl" name="AdaptativeLight">
     <requires aggregate="true" optional="true" specification="fr.liglab.adele.icasa.device.presence.PresenceSensor" field="presenceSensors">
       <callback method="bindPresenceSensors" type="bind"/>
@@ -17,16 +19,17 @@
     </requires>
   </component>
   <component classname="com.im2ag.pervasive.temperature.TemperatureControlImpl" name="TemperatureControl">
-<callback method="start" transition="validate"/>
-<callback method="stop" transition="invalidate"/>
-<requires aggregate="true" optional="true" specification="fr.liglab.adele.icasa.device.temperature.Thermometer" field="Thermometer">
-<callback method="BindThermometer" type="bind"/>
-<callback method="UnbindThermometer" type="unbind"/>
-</requires>
-<requires aggregate="true" optional="true" specification="fr.liglab.adele.icasa.device.temperature.Heater" field="Heater">
-<callback method="BindHeater" type="bind"/>
-<callback method="UnbindHeater" type="unbind"/>
-</requires>
-</component>
+    <callback method="start" transition="validate"/>
+    <callback method="stop" transition="invalidate"/>
+    <requires aggregate="true" optional="true" specification="fr.liglab.adele.icasa.device.temperature.Thermometer" field="Thermometer">
+      <callback method="BindThermometer" type="bind"/>
+      <callback method="UnbindThermometer" type="unbind"/>
+    </requires>
+    <requires aggregate="true" optional="true" specification="fr.liglab.adele.icasa.device.temperature.Heater" field="Heater">
+      <callback method="BindHeater" type="bind"/>
+      <callback method="UnbindHeater" type="unbind"/>
+    </requires>
+  </component>
   <instance component="AdaptativeLight" name="my.first.follow.me"/>
+  <instance component="TemperatureControl" name="TemperatureController"/>
 </ipojo>
